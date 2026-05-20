@@ -42,15 +42,15 @@
 New plugin workflow:
 
 1. Create with `$plugin-creator`
-2. Validate with [`plugin-scanner`](https://github.com/hashgraph-online/hol-guard)
-3. Gate PRs with the [HOL scanner GitHub Action](https://github.com/hashgraph-online/ai-plugin-scanner-action)
+2. Validate with [`codex-plugin-scanner`](https://github.com/hashgraph-online/codex-plugin-scanner)
+3. Gate PRs with the [HOL scanner GitHub Action](https://github.com/hashgraph-online/hol-codex-plugin-scanner-action)
 4. Ship or submit with confidence
 
 Quick preflight:
 
 ```bash
-pipx run plugin-scanner lint .
-pipx run plugin-scanner verify .
+pipx run codex-plugin-scanner lint .
+pipx run codex-plugin-scanner verify .
 ```
 
 This repo publishes a Codex repo marketplace at `.agents/plugins/marketplace.json`. The marketplace points at mirrored installable plugin bundles under `./plugins/`, so a clone of this repo can act as a curated plugin source in Codex.
@@ -123,13 +123,9 @@ Third-party plugins built by the community. [PRs welcome](#contributing)!
 - [Aegis](https://github.com/GanyuanRan/Aegis) - An agentic skills framework & software development methodology that works: planning, TDD, debugging, and collaboration workflows.
 - [Agentizer](https://github.com/Humiris/wwa-transform) - Turn any website into an AI-powered agentfront with split-pane
 - [AgentOps](https://github.com/boshu2/agentops) - DevOps layer for coding agents with flow, feedback, and memory that compounds between sessions.
-- [agenttrace](https://github.com/luoyuctl/agenttrace) - Audit local AI coding-agent sessions for costs, token waste, failures, latency, anomalies, health, diffs, and CI gate signals.
 - [Antigravity Workspace Template](https://github.com/study8677/antigravity-workspace-template) - Multi-agent codebase knowledge graph generator with context-aware planning and automatic scope management — turns codebases into coherent agent workspaces.
-- [Archcore](https://github.com/archcore-ai/plugin) - Gives coding agents the architecture, rules, and prior decisions of the repo via skills, hooks, and MCP — so new changes land where the project says they belong across Claude Code, Cursor, and Codex CLI.
-- [Atelier Arith Julia Development Skills](https://github.com/AtelierArith/atelier-arith-julia-development-skills) - Codex skills for Julia installation, package creation, app creation, and test workflows.
 - [Bring Your AI Migration Auditor](https://github.com/unitedideas/bringyour-mcp) - Read-only Codex plugin for auditing Claude Code to Codex migrations before Codex edits code. Checks AGENTS.md/CLAUDE.md scope, hooks, MCP config, skills, secret references, and validation notes.
 - [Brooks Lint](https://github.com/hyhmrright/brooks-lint) - AI code reviews grounded in six classic engineering books — decay risk diagnostics with book citations, severity labels, and four analysis modes (PR review, architecture audit, tech debt, test quality).
-- [Changelog Forge](./plugins/mturac/changelog-forge) - Conventional commits → CHANGELOG section + semver bump.
 - [Claude Code for Codex](https://github.com/sendbird/cc-plugin-codex) - Reverse of OpenAI's official Claude-hosted plugin: use Claude Code from Codex for reviews, rescue tasks, tracked background jobs, and hook-powered review gates.
 - [Claude Code Harness](https://github.com/dadwadw233/claude-code-harness) - Harness blueprint skill for turning vague agent ideas into concrete designs for request assembly, control loops, memory, permissions, recovery, and extension planes.
 - [Claude Code Skills](https://github.com/alirezarezvani/claude-skills) - 223 production-ready skills, 23 agents, and 298 Python tools across 9 domains — engineering, marketing, product, compliance, and more.
@@ -139,45 +135,41 @@ Third-party plugins built by the community. [PRs welcome](#contributing)!
 - [Codex Multi Auth](https://github.com/ndycode/codex-multi-auth) - Multi-account OAuth manager for the official Codex CLI with switching, health checks, and recovery tools.
 - [Codex Reviewer](https://github.com/schuettc/codex-reviewer) - Second-pass review of Claude-driven plans and implementations.
 - [Codex rg Guard](https://github.com/Rycen7822/codex-rg-guard) - Budgeted `rg`/`grep` replacement for Codex that narrows broad searches before they waste model context.
-- [Commit Narrator](./plugins/mturac/commit-narrator) - Generate semantic commit message from staged diff, including the *why*.
-- [Deps Doctor](./plugins/mturac/deps-doctor) - Multi-ecosystem dependency audit (npm, pip, cargo, go) in one report.
-- [Development Skills](https://github.com/reidemeister94/development-skills) - Three-tier triage (PASS_THROUGH / LIGHT / FULL 4-phase) development workflow for Codex and Claude Code with language auto-detection (Python, Java, TypeScript, Swift, frontend) and a staff-reviewer subagent for fresh-eyes review on every change.
 - [ejentum-mcp](https://github.com/ejentum/ejentum-mcp) - MCP server exposing reasoning, code, anti-deception, and memory harness tools for Codex.
-- [Env Lint](./plugins/mturac/env-lint) - `.env` vs `.env.example` key parity — never prints values.
-- [Everything OpenAI Codex](https://github.com/mturac/everything-openai-codex) - EOC is an open-source operating system for Codex workflows with 200+ skills, agents, hooks, rules, memory, safety gates, install profiles, and cross-harness adapters.
-- [Flaky Detector](./plugins/mturac/flaky-detector) - Run a test command N times, report per-test flakiness %.
 - [Frappe Agent](https://github.com/Dkm0315/frappe-agent) - Frappe and ERPNext coding, customization, bench, and review intelligence for Codex.
 - [GrayMatter](https://github.com/ValkyrLabs/GrayMatter) - Durable memory and shared graph state for Codex and OpenClaw agents, with live ValkyrAI schema awareness.
-- [HOL Guard Plugin](https://github.com/hashgraph-online/hol-guard-plugin) - AI antivirus workflow for Codex, Claude Code, Cursor, Gemini, OpenCode, MCP servers, skills, and plugin release checks with local approvals and receipts.
 - [HOTL Plugin](https://github.com/yimwoo/hotl-plugin) - Human-on-the-Loop AI coding workflow plugin for Codex, Claude Code, and Cline with structured planning, review, and verification guardrails.
 - [Personal Data Protection](https://github.com/AltByteSG/personal-data-protection-skill) - Engineer-facing personal-data-protection compliance reference — Singapore PDPA, Thailand PDPA, Indonesia UU PDP, Malaysia PDPA (Act 709 + 2024 Amendments), Philippines DPA — organised by where in the stack each obligation lands, with checklists, breach-response runbook, and a developer-view divergence table across all five.
-- [PR Storyteller](./plugins/mturac/pr-storyteller) - PR title + body + test plan from commits and diff vs base branch.
-- [Praxis](https://github.com/ouonet/praxis) - Intent-driven workflow skills for coding agents: describe what done looks like, not the steps. Triage-first design keeps token costs low across design, TDD, debug, review, and release.
+- [Praxis](https://github.com/ouonet/praxis) - Token-lean triage-driven workflow skills for coding agents: design, planning, TDD, debugging, review, worktree, subagents, and release. 10–40× cheaper per skill than comparable frameworks while preserving full workflow discipline.
 - [Project Autopilot](https://github.com/AlexMi64/codex-project-autopilot) - Turn an idea into a structured project workflow with planning, execution, verification, and handoff.
 - [Registry Broker](https://github.com/hashgraph-online/registry-broker-codex-plugin) - Delegate tasks to specialist AI agents via the HOL Registry, plan, find, summon, and recover sessions.
-- [Secret Guard](./plugins/mturac/secret-guard) - Pre-commit secret scanner using pattern and entropy detection.
 - [Session Orchestrator](https://github.com/Kanevry/session-orchestrator) - Session orchestration for Claude Code, Codex, and Cursor IDE — structured planning, wave-based execution, VCS integration (GitLab + GitHub), quality gates, and clean session close-out with issue tracking.
 - [Spec-Driven Development](https://github.com/Habib0x0/spec-driven-plugin) - Three-phase Requirements → Design → Tasks workflow for Claude Code and Codex — EARS notation acceptance criteria, autonomous execution loop, cross-spec dependencies, and post-implementation acceptance testing.
-- [Standup Generator](./plugins/mturac/standup-gen) - Daily standup notes from git activity across repos.
 - [Stark](https://github.com/f0d010c/stark) - UI/UX design plugin for AI coding agents with product-flow routing, platform-native interface guidance, asset planning, and shipped-reference analysis before code.
 - [tailtest](https://github.com/avansaber/tailtest-codex) - Hook-powered test generation -- detects files changed during an agent turn and instructs Codex to write and run tests automatically. Zero config, 8 languages.
 - [Tandem Workflow Architect](https://github.com/frumu-ai/tandem-codex-plugin) - Plan Tandem workflows in Codex, then validate, preview, and run them through the governed Tandem engine.
 - [Tartiner Labs](https://github.com/tartinerlabs/skills) - Agent skills for git workflows, GitHub automation, security audits, code refactoring, and project tooling.
 - [Team Skills Platform](https://github.com/Colin4k1024/tsp) - Role-based team delivery framework — Tech Lead-orchestrated 8-role system with 195+ skills, 27 specialist agents, 80+ commands, hooks, and ECC harness for Claude Code, Codex, and OpenCode.
-- [Test Gap](./plugins/mturac/test-gap) - Find lines in your diff lacking test coverage (Cobertura, lcov, coverage.json).
-- [TODO Harvest](./plugins/mturac/todo-harvest) - TODO/FIXME/HACK scan with `git blame` author + age.
 - [Tool Advisor](https://github.com/dragon1086/claude-skills) - Read-only meta-skill that scans your MCP servers, skills, plugins, and CLI tools, then suggests up to three ranked approaches (Methodical / Fast / Deep) with a copy-paste Quick Action table.
 - [Unity Agent Workflows](https://github.com/AUN-PN/unity-agent-workflows) - Codex plugin and skill for Unity 2D agents that enforces "No proof, no edit" workflows with runtime-owner proof, Teach structure maps, and validation gates.
 - [Universal Design Principles](https://github.com/HDeibler/universal-design-principles) - Cross-agent UX and product-design marketplace with a root Codex collection plugin, five focused plugin bundles, and 137 Agent Skills for design review, accessibility, layout, interaction, cognition, and product polish.
 - [VibePortrait](https://github.com/dadwadw233/VibePortrait) - Developer personality portrait generator — analyzes AI conversation history to produce MBTI type (16 color themes), capability radar, developer rating, 3-dimension famous match, and a persona skill that lets any AI "think like you".
 - [Writer's Loop](https://github.com/xxsang/writers-loop) - Structured AI writing workflow for planning, critique, revision, translation, style distillation, and opt-in local preference learning.
-- [Zagrosi Forge](https://github.com/zagrosi-code/zagrosi-forge) - Decompose broad project briefs into researched plans and implement sectioned work with TDD, quality gates, and traceability.
+- [Commit Narrator](./plugins/mturac/commit-narrator) - Generate semantic commit message from staged diff, including the *why*.
+- [PR Storyteller](./plugins/mturac/pr-storyteller) - PR title + body + test plan from commits and diff vs base branch.
+- [Test Gap](./plugins/mturac/test-gap) - Find lines in your diff lacking test coverage (Cobertura, lcov, coverage.json).
+- [Deps Doctor](./plugins/mturac/deps-doctor) - Multi-ecosystem dependency audit (npm, pip, cargo, go) in one report.
+- [Env Lint](./plugins/mturac/env-lint) - `.env` vs `.env.example` key parity — never prints values.
+- [Secret Guard](./plugins/mturac/secret-guard) - Pre-commit secret scanner using pattern and entropy detection.
+- [Standup Generator](./plugins/mturac/standup-gen) - Daily standup notes from git activity across repos.
+- [TODO Harvest](./plugins/mturac/todo-harvest) - TODO/FIXME/HACK scan with `git blame` author + age.
+- [Flaky Detector](./plugins/mturac/flaky-detector) - Run a test command N times, report per-test flakiness %.
+- [Changelog Forge](./plugins/mturac/changelog-forge) - Conventional commits → CHANGELOG section + semver bump.
 ### Tools & Integrations
 
 - [Agent Message Queue](https://github.com/avivsinai/agent-message-queue) - File-based inter-agent messaging with co-op mode, cross-project federation, and orchestrator integrations.
 - [Agent Vision](https://github.com/zfifteen/agent-vision) - macOS-only local camera plugin for explicit snapshots, streaming controls, and file-backed image input.
 - [Apple Productivity](https://github.com/matk0shub/apple-productivity-mcp) - Local Apple Calendar and Reminders tooling for macOS with Codex plugin adapters.
-- [ArmorCodex](https://github.com/armoriq/armorCodex) - Intent-based security for Codex with MCP plan registration, policy gating, CSRG cryptographic proofs, and audit logging on Bash and apply_patch.
 - [AxonFlow](https://github.com/getaxonflow/axonflow-codex-plugin) - Runtime governance for Codex with policy enforcement on terminal commands, advisory checks for non-terminal tools via skills, PII/secret detection, and compliance-grade audit trails. Self-hosted via Docker.
 - [Bitbucket CLI](https://github.com/avivsinai/bitbucket-cli) - Manage Bitbucket repos, PRs, branches, issues, webhooks, and pipelines for Data Center and Cloud.
 - [Call-E](https://github.com/CALLE-AI/call-e-integrations) - Plan, run, and inspect Call-E phone call workflows from Codex through the calle CLI.
@@ -187,7 +179,6 @@ Third-party plugins built by the community. [PRs welcome](#contributing)!
 - [Codex Mem](https://github.com/2kDarki/codex-mem) - Automatically capture, compress, and inject session context back into future Codex sessions.
 - [Codex Obsidian](https://github.com/greg-asher/codex-obsidian) - Local Obsidian note and vault workflows through the official desktop `obsidian` CLI.
 - [Codex SEO](https://github.com/BestLemoon/codex-seo) - Full-stack SEO audits, Google API workflows, backlinks analysis, reporting, and optional MCP extensions for Codex.
-- [Codex Usage Tracker](https://github.com/douglasmonsky/codex-usage-tracker) - Track aggregate Codex token usage from local session logs with MCP tools for summaries, session detail, CSV export, and dashboard generation.
 - [Context Pack](https://github.com/Rothschildiuk/context-pack) - Generate compact first-pass repository briefings for coding agents before deeper exploration.
 - [Data Product Builder for dbt](https://github.com/entropy-data/dataproduct-builder-dbt) - Full data-product lifecycle on dbt for Entropy Data: scaffold, audit, and integrate projects with ODCS, ODPS, OpenLineage, and GitHub Actions.
 - [Dodo Payments](https://github.com/dodopayments/dodo-agent-plugin) - Payments integration for checkouts, subscriptions, and billing with live API and documentation MCP servers with browser OAuth.
@@ -210,7 +201,6 @@ Third-party plugins built by the community. [PRs welcome](#contributing)!
 - [Remotion Plugin](https://github.com/tim-osterhus/codex-remotion-plugin) - Build parameterized Remotion videos in Codex with the official Remotion docs MCP, composition scaffolding, and a data-driven launch-video workflow.
 - [ru-text](https://github.com/talkstream/ru-text) - Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing, and business correspondence.
 - [Rust Reverse Engineering](https://github.com/jingjing2222/rust-reverse-engineering-skill) - Reverse engineer Rust binaries and libraries: triage targets, demangle symbols, recover crate namespaces, and map panic, unwind, async, and FFI paths.
-- [SeparateWeb Capture](https://github.com/AUN-PN/SeparateWeb) - Give Codex eyes on real webpages with full-page screenshots, UI crops, and JSON manifests for frontend visual QA.
 - [sitemd](https://github.com/sitemd-cc/sitemd) - Build websites from Markdown via MCP — 22 tools for creating pages, generating content, validating, running SEO audits, configuring settings, and deploying static sites to Cloudflare Pages.
 - [Synta MCP](https://github.com/Synta-ai/n8n-mcp-codex-plugin-synta) - Build, edit, validate, and self-heal n8n workflows with Synta MCP tools and Codex-ready workflow guidance.
 - [Task Scheduler](https://github.com/6Delta9/task-scheduler-codex-plugin) - OpenAI Codex plugin and local MCP server for turning task lists into realistic schedules with blocked dates, capacity overrides, overflow tracking, and markdown planning output.
@@ -259,21 +249,21 @@ For this curated list, the machine-readable source of truth is the generated rep
 
 ## Validate Before You Ship
 
-After scaffolding with `$plugin-creator`, use [`plugin-scanner`](https://github.com/hashgraph-online/hol-guard) as your quality gate before publishing, review, or distribution.
+After scaffolding with `$plugin-creator`, use [codex-plugin-scanner](https://github.com/hashgraph-online/codex-plugin-scanner) as your quality gate before publishing, review, or distribution.
 
 For skill/plugin authoring workflows, [Codex SkillForge](https://github.com/f0d010c/skillforge) provides an ESLint-style CLI and GitHub Action for scaffolding, linting, smoke-testing, and packaging Codex skills/plugins before publishing.
 
 ### Local Preflight
 
 ```bash
-pipx run plugin-scanner lint .
-pipx run plugin-scanner verify .
+pipx run codex-plugin-scanner lint .
+pipx run codex-plugin-scanner verify .
 ```
 
 ### PR Gate (GitHub Actions)
 
 ```yaml
-- uses: hashgraph-online/ai-plugin-scanner-action@v1
+- uses: hashgraph-online/hol-codex-plugin-scanner-action@v1
   with:
     plugin_dir: "."
     fail_on_severity: high
@@ -310,7 +300,7 @@ The score is best used as a quick trust signal and triage summary (not the only 
 
 ## Plugin Trust Scores
 
-Every plugin in this list is automatically ingested by the [HOL Plugin Registry](https://hol.org/registry/plugins), which runs each through the [`plugin-scanner`](https://github.com/hashgraph-online/hol-guard) to produce a trust score and security analysis.
+Every plugin in this list is automatically ingested by the [HOL Plugin Registry](https://hol.org/registry/plugins), which runs each through the [codex-plugin-scanner](https://github.com/hashgraph-online/codex-plugin-scanner) to produce a trust score and security analysis.
 
 Each plugin gets a detailed breakdown across six factors:
 
