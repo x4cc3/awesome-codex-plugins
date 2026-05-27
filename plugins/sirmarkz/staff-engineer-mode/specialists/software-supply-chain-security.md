@@ -42,13 +42,14 @@ Production should run artifacts whose source, build, dependencies, and confirmat
 - Deployment path, admission controls, environment promotion, and rollback.
 - Automation credentials, token scopes, secret exposure, and third-party integrations.
 - Scanning coverage, vulnerability checkpoint, and incident/exception process.
+- Vulnerability-reporting or security-policy intake route when external reports or project users can report supply-chain issues.
 
 ## Workflow
 
 1. **Map source to deploy.** Draw every step from code change through build, artifact, registry, deployment, and runtime admission.
 2. **Protect source.** Require traceable accepted changes, branch protections, responsibility, and tamper-evident history for production paths.
 3. **Harden builders.** Use isolated or ephemeral build environments for production artifacts; minimize mutable state and privileged credentials.
-4. **Record provenance.** Produce metadata linking artifact identity, source revision, accepted change, build steps, builder identity, dependency inputs, build time, and confirmation path. Tier-critical paths should make this metadata verifiable at deployment.
+4. **Record provenance.** Produce metadata linking artifact identity, source revision, accepted change, build steps, builder identity, dependency inputs, build time, and confirmation path. High-impact paths should make this metadata verifiable at deployment.
 5. **Protect artifacts.** Sign or otherwise verify integrity; store artifacts in controlled registries with retention and rollback.
 6. **Generate inventories.** Produce structured, machine-readable dependency inventories when they support vulnerability response, customer requests, or release checks workflows; name the consumer so the artifact is not ritual.
 7. **Decide reproducibility level.** State whether the path needs byte-identical, declared-nondeterminism, or content-equivalent rebuild records, and record any expected differences.
@@ -56,6 +57,7 @@ Production should run artifacts whose source, build, dependencies, and confirmat
 9. **Control deployment.** Verify artifact integrity/provenance at admission and keep environment promotion traceable.
 10. **Constrain automation.** Use least-privilege, short-lived credentials and secret scanning across source/build paths.
 11. **Screen common attack classes.** Check for dependency confusion, typo or name-squatting, compromised package publishing, build-cache poisoning, unchecked install hooks, and compromised automation credentials.
+12. **Route vulnerability intake.** Define where security reports about dependencies, build artifacts, or release integrity enter triage, then hand deployed-risk decisions to `vulnerability-management` with artifact, exposure, and provenance details.
 
 ## Synthesized Default
 
@@ -77,14 +79,14 @@ Use accepted source, controlled production pipelines, isolated builds, provenanc
 ## Exceptions
 
 - Low-risk prototypes may use lighter controls if isolated from production data and deployment.
-- Legacy build systems may need staged improvements; record missing provenance/signing as exceptions with expiry and compensating controls.
+- Legacy build systems may need staged improvements; record missing provenance/signing as exceptions with expiry and compensating controls using the shared risk-acceptance lifecycle plus the shared compensating-control format.
 - Dependency inventories are useful when consumed for vulnerability, customer, or release checks workflows; do not generate unused artifacts as ritual.
 - Emergency patches can use expedited paths only with post-facto provenance and acceptance checks.
 - Release engineering covers reproducible build mechanics; this skill covers the trust boundary, provenance expectations, artifact integrity, and admission policy.
 
 ## Response Quality Bar
 
-- Lead with the source-to-deploy risk, control gap, provenance plan, or exception register requested.
+- Lead with the source-to-deploy risk, control gap, provenance plan, or exception register requested, using the shared risk-register and compensating-control formats for exception fields.
 - Cover source acceptance, builder trust, artifact integrity, provenance, dependency inventory, deployment admission, automation credentials, and secret scanning before optional supply-chain breadth.
 - Make recommendations actionable with control locations, validation commands, admission checks, exception expiry, and remediation steps where relevant.
 - Name the details to inspect, such as protected branch settings, build identity, isolation model, artifact metadata, signatures or digests, dependency-inventory consumers, deploy policy, and credential scopes; do not state details you have not seen.
@@ -100,7 +102,8 @@ Use accepted source, controlled production pipelines, isolated builds, provenanc
 - Structured dependency inventory policy with producer, consumer, retention, and vulnerability checkpoint.
 - Build and deployment credential hardening plan.
 - Secret scanning and exposure response plan.
-- Exceptions with expiry, and compensating controls.
+- Vulnerability-reporting intake and triage handoff for supply-chain findings.
+- Exceptions with expiry and compensating controls using the shared risk-acceptance lifecycle plus the shared compensating-control format.
 
 ## Checks Before Moving On
 

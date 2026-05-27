@@ -29,11 +29,31 @@ Read `skills/_shared/bootstrap-gate.md` and execute the gate check. If the gate 
 Do NOT proceed past Phase 0 if GATE_CLOSED. There is no bypass. Refer to `skills/_shared/bootstrap-gate.md` for the full HARD-GATE constraints.
 </HARD-GATE>
 
+## Phase 0.5: Parallel-Aware Preamble
+
+> Skip silently when `persistence: false` in Session Config.
+
+Before Phase 1, run the parallel-aware preamble per `skills/_shared/parallel-aware-preamble.md`. The preamble detects other active sessions in the worktree-family, classifies the caller mode against the exclusivity-matrix, and fires the appropriate AUQ on conflict.
+
+This runs BEFORE the local session-lock acquire in Phase 1.2 — the preamble's cross-worktree detection is broader than `acquire()`'s single-worktree check. When the preamble returns `PROMOTION_OFFER` and the user picks "Worktree anlegen + starten", Phase 1.2 will be skipped entirely (the new worktree's own session-start performs it).
+
+**Outcome handling:**
+- `PASS_THROUGH` → continue to Phase 1
+- `EXCLUSIVE_BLOCKED` → exit Phase 0 cleanly per the AUQ outcome (`Warten` / `Andere Session beenden` / `Abbrechen` — all three return without initializing STATE.md)
+- `PROMOTION_OFFER` with user picking "Worktree anlegen + starten" → call `enterWorktree({ basePath, sessionId, branch, repoRoot })` from `scripts/lib/autopilot/worktree-pipeline.mjs`. Compute params: `basePath = path.dirname(repoRoot)`, `sessionId` from resolveSemanticSessionId(), `branch` from current HEAD, `repoRoot = process.cwd()`. On success, exit Phase 0 immediately — the new worktree's own session-start runs from scratch (Phase 1 onwards), Phase 1.2 session-lock-acquire is the new worktree's responsibility. On enterWorktree failure (`WorktreeBoundaryError` or `git worktree add` non-zero exit), emit stderr WARN `parallel-aware: enterWorktree failed: <err>; falling back to Manuell` and proceed via the Manuell path.
+- `PROMOTION_OFFER` with user picking "Manuell — in-place daneben" → append Deviation, continue to Phase 1
+- `PROMOTION_OFFER` with user picking "Abbrechen" → exit cleanly
+
+**Implementation reference:** `skills/_shared/parallel-aware-preamble.md § Implementation`.
+**AUQ reference:** `skills/_shared/parallel-aware-auq.md`.
+
 ## Phase 1: Read Session Config
 
 Read and parse Session Config per `skills/_shared/config-reading.md`. Store result as `$CONFIG`.
 
 ## Phase 1.2: Session Lock Acquire (#330)
+
+> **See also Phase 0.5 (Parallel-Aware Preamble)** — the cross-worktree detection runs first. This Phase 1.2 handles the single-worktree local-lock semantics that complement the preamble.
 
 > Skip this phase if `persistence` config is `false`.
 
@@ -106,6 +126,8 @@ Where `sessionId` is the session identifier derived from the session type and ti
 
 4. **`result.ok === false`** with `reason === 'fs-error'**:
    - Filesystem error when writing the lock file. Log `⚠ session-lock: acquire failed — <error>. Continuing without lock (degraded mode).` and proceed without a lock. Do NOT block the session for a transient FS error.
+
+> **New reasons from P1.2 #570:** When called with the optional `activeSessions` argument, `acquire()` can also return `active-incompatible-exclusive`, `active-compatible-parallel`, or `active-readonly-bypass`. Session-start invokes `acquire()` WITHOUT `activeSessions` (the preamble in Phase 0.5 already handled cross-worktree detection); these new reasons surface only in callers that bypass the preamble. Other entry-points (autopilot, session-plan, wave-executor, session-end) follow the same pattern.
 
 ### Cross-host behaviour
 
@@ -645,11 +667,11 @@ if (bannerText) {
 ### Implementation notes
 
 - All inputs are derived through `readBannerInputs()` in `scripts/lib/memory-banner.mjs`; the skill never reads JSONL directly — keeps the banner authoritative for output format.
-- Memory-file count = `*.md` files under the memory directory (resolved by `resolveMemoryDir()` from `auto-dream.mjs`). Sessions count = lines in `.orchestrator/metrics/sessions.jsonl`. `daysSinceCleanup` = floor((now - lastCleanupAt) / 86400000); `null` when never cleaned.
+- Memory-file count = `*.md` files under the memory directory (resolved by `resolveMemoryDir()` from `scripts/lib/memory-paths.mjs`, extracted from `auto-dream.mjs` in #512). Sessions count = lines in `.orchestrator/metrics/sessions.jsonl`. `daysSinceCleanup` = floor((now - lastCleanupAt) / 86400000); `null` when never cleaned.
 - Banner truncates subject and excerpt strings at ~80 visible chars (with `…`).
 - The banner NEVER exposes raw JSON; all values are pre-cleaned scalars.
 
-Cross-reference: PRD F2.3 acceptance criteria (#505); `scripts/lib/memory-banner.mjs` API (`renderMemoryBanner`, `readBannerInputs`, `formatBanner`, `extractCardExcerpt`).
+Cross-reference: PRD F2.3 acceptance criteria (#505); `scripts/lib/memory-banner.mjs` API (`renderMemoryBanner`, `readBannerInputs`; test-only exports `_formatBanner`, `_extractCardExcerpt` carry the `_`-prefix per #542 convention).
 
 ## Phase 7: Research (session type dependent)
 

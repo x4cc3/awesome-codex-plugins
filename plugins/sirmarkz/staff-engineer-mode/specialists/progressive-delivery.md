@@ -37,7 +37,7 @@ Produces a staged rollout plan with named blast radius per stage, predeclared ca
 ## Info To Gather
 
 - Current work phase, next decision, what is known, and assumptions where details are missing.
-- Change type, responsible change path, affected users, blast radius, tier, and reversibility.
+- Change type, responsible change path, affected users, blast radius, declared impact, and reversibility.
 - Artifact identity and promotion path from build to environments.
 - Production-like preflight stage coverage and whether exposure control is separate from deployment.
 - Rollout unit: instance, ring, cohort, partition, deployment unit, location, tenant, percentage, device group, or internal-only group.
@@ -55,7 +55,7 @@ Produces a staged rollout plan with named blast radius per stage, predeclared ca
 4. **Define compatibility.** Ensure old and new versions can coexist across clients, services, data, and messages during rollout.
 5. **Stage stateful changes.** Keep reader/writer compatibility across at least one-version skew; use expand/contract, dual-read/dual-write, delayed cleanup, and explicit schema/data ordering when state is involved.
 6. **Choose canary checks.** Select metrics before release. Include user-visible symptoms and correctness, not only internal health. Scope each metric to the canary slice itself — fleet-aggregate metrics dilute the signal into the size of the unchanged deployment, so canary regression vanishes long before it crosses a fleet-wide threshold. Each check needs a baseline window, minimum observation window, bake time, and enough exposed traffic or an alternate signal such as synthetic probes, extended bake time, or manual verification.
-7. **Check each exposure step.** Exercise the changed path in a production-like preflight stage, then start with a tiny production slice when possible and move through rings, cohorts, partitions, stamps, deployment units, or locations only after health signals say the previous step is safe. Within an ordinary rolling deployment, keep at least two-thirds of serving capacity healthy at all times unless an explicit capacity model shows a different threshold is safe; faster simultaneous replacement narrows surge headroom and risks turning the deployment itself into the saturation event.
+7. **Check each exposure step.** Exercise the changed path in a production-like preflight stage, then start with a tiny production slice when possible and move through rings, cohorts, partitions, stamps, deployment units, or locations only after health signals say the previous step is safe. Preserve the declared surge and failover headroom at every step. For ordinary stateless serving deployments with no better capacity model, replacing no more than roughly one-third of serving capacity at once is a useful starting guardrail; stateful, batch, client, tiny-fleet, or non-serving changes need their own safety threshold.
 8. **Set stop rules.** Define thresholds, who can halt, and how rollback works. Stop signals should fire before the tighter internal SLO alert thresholds are crossed.
 9. **Classify rollback and promotion control.** Pre-classify rollback safety per change: it is safe when the change is stateless, flag-gated, purely additive, or recently deployed with minimal state divergence; it is dangerous when a schema migration has run, a data format changed and new data is being written, external clients depend on the new contract, a stateful workflow is in flight, or a cache holds data in the new format. Choose forward-fix when rollback would cause more damage than the current impact, the fix is small and quickly deployable, or impact is confined to an isolatable subset. When rolling back a subset, pause promotion into and out of affected rollout units until the fix or risk decision is clear. Select the rollback artifact from when the harmful change entered, not just the immediately previous release. If user impact is active, route incident command to `incident-response-and-postmortems` while keeping rollback mechanics traceable here.
 10. **Handle forward-fix-only surfaces.** If rollback is structurally impossible, require a server-side kill switch or disable path, staged adoption metric, hotfix lane, and explicit user confirmation before first exposure.
@@ -84,7 +84,7 @@ Use build-once promotion, progressive exposure, predeclared health and canary me
 
 - Emergency fixes may use a narrower or faster rollout when waiting is riskier than release, but stop criteria and rollback checks still apply.
 - Some destructive data changes cannot be rolled back; they require backup/restore test results, delayed cleanup, and forward-fix criteria.
-- Low-risk internal changes may use lighter checks if blast radius and user risk acceptance are explicit.
+- Low-risk internal changes may use lighter checks if blast radius and user risk acceptance using the shared risk-acceptance lifecycle are explicit.
 - Client releases with slow adoption may require forward-fix and kill-switch strategy rather than true rollback.
 - Temporary experiment flags should expire within about 90 days by default; long-lived operational kill switches need a renewal cadence and removal or renewal decision.
 
